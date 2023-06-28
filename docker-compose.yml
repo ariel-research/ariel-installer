@@ -1,0 +1,66 @@
+version: "3"
+
+services:
+  redis:
+    image: redis:5-alpine
+    entrypoint: redis-server --appendonly yes
+    restart: always
+    container_name: 'arielinstaller_redis'
+    volumes:
+      - ./data/redis:/data
+    ports:
+      - '6378:6379'
+    networks:
+      testing_net:
+        ipv4_address: 172.27.1.8
+
+  web:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: arielinstaller-prod
+    restart: on-failure
+    user: root
+    volumes:
+      - .:/arielinstaller
+      - ./static:/arielinstaller/static
+      - ../github_projects:/github_projects:rw
+    command: bash -c "python manage.py migrate --noinput && python manage.py collectstatic --noinput  && ls -Als static && gunicorn config.wsgi:application --bind 0.0.0.0:8001"
+    ports:
+      - "8001:8001"
+    networks:
+      testing_net:
+        ipv4_address: 172.27.1.10
+    environment:
+      - REDIS_PORT=6379
+      - REDIS_HOST=172.27.1.8
+      - CREATE_VIRTUAL_ENV=0
+  rq:
+    build: .
+    container_name: 'arielinstaller_celery'
+    user: root
+    command: python manage.py rqworker -v 3 default
+    volumes:
+      - .:/arielinstaller
+      - ./static:/arielinstaller/static
+      - ../github_projects:/github_projects
+    restart: on-failure
+    links:
+      - redis
+    depends_on:
+      - web
+      - redis
+    networks:
+      testing_net:
+        ipv4_address: 172.27.1.11
+    environment:
+      - REDIS_PORT=6379
+      - REDIS_HOST=172.27.1.8
+      - CREATE_VIRTUAL_ENV=0
+
+networks:
+  testing_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.27.0.0/16
