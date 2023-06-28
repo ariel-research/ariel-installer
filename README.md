@@ -26,7 +26,7 @@ python manage.py runserver 0.0.0.0:8001
 
 ##### Prod
 ```bash
-gunicorn config.wsgi --daemon
+gunicorn -b 0.0.0.0:8001 config.wsgi --daemon
 ```
 
 or in Docker
