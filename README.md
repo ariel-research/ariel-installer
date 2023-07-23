@@ -8,7 +8,7 @@ sudo apt update
 sudo apt install redis-server python3-virtualenv
 sudo systemctl restart redis.service
 virtualenv -p python3 .env
-pip install -r requirements.txt
+pip install -r requirements.txt --use-deprecated=legacy-resolver
 python3 manage.py migrate
 mkdir ../github_projects
 ```
