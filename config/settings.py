@@ -110,6 +110,7 @@ INSTALLED_APPS = [
     'rangefilter',
     'daterange_filter',
     'django_filters',
+    'scheduler'
 ]
 
 MIDDLEWARE = [

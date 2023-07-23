@@ -31,6 +31,7 @@ urlpatterns = [
                   path('hijack/', include(hijack_urls, namespace='hijack')),
                   path('github/', include(github_urls, namespace="github")),
                   path('django-rq/', include('django_rq.urls')),
+                  path('scheduler/', include('scheduler.urls')),
               ] + staticfiles_urlpatterns()
 
 admin.site.site_header = settings.PROJECT_TITLE
