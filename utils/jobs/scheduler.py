@@ -10,7 +10,9 @@ from django.core.paginator import Paginator
 from github.models import AIGitHubProject
 from github.utils import AIApplicationRunner, RepoTools
 
+from scheduler import job
 
+@job
 def check_new_commits_task():
     logging.info("Running checking new commits task")
 
@@ -26,6 +28,7 @@ def check_new_commits_task():
             repo_tools.git_fetch()
 
 
+@job
 def check_running_projects_task():
     logging.info("Running checking the projects are running")
 
