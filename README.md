@@ -22,11 +22,23 @@ python manage.py createsuperuser
 ##### In Debug mode
 ```bash
 python manage.py runserver 0.0.0.0:8001
+python manage.py flushqueue --queue default
+python manage.py flushqueue --queue low
+```
+
+Next two commands in different shell tabs:
+```bash
+python manage.py rqscheduler
+python manage.py rqworker default low 
 ```
 
 ##### Prod
 ```bash
 gunicorn -b 0.0.0.0:8001 config.wsgi --daemon
+python manage.py flushqueue --queue default
+python manage.py flushqueue --queue low
+nohup python manage.py rqscheduler &
+nohup python manage.py rqworker default low &
 ```
 
 or in Docker

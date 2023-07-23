@@ -27,10 +27,10 @@ from github import urls as github_urls
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('hijack/', include(hijack_urls, namespace='hijack')),
-    path('github/', include(github_urls, namespace="github")),
-    path('django-rq/', include('django_rq.urls'))
-] + staticfiles_urlpatterns()
+                  path('admin/', admin.site.urls),
+                  path('hijack/', include(hijack_urls, namespace='hijack')),
+                  path('github/', include(github_urls, namespace="github")),
+                  path('django-rq/', include('django_rq.urls')),
+              ] + staticfiles_urlpatterns()
 
 admin.site.site_header = settings.PROJECT_TITLE

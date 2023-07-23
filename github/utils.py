@@ -25,12 +25,13 @@ from uritools import urisplit
 
 
 class PyGit2Callbacks(RemoteCallbacks):
-    def __init__(self, credentials=None, certificate=None):
+    def __init__(self, project, credentials=None, certificate=None):
         """
         Class for pygit2 remote callbacks.
 
         :return:
         """
+        self.project = project
         self.processed_percentage = -1
         # 'x-oauth-basic' password is used only for projects imported from Github
         self.github_password = 'x-oauth-basic'
@@ -186,6 +187,25 @@ class RepoTools(object):
 
             rmtree(self.local_dir)
 
+    def git_fetch(self):
+        git_repo_url = self.get_repo_url()
+        if os.path.exists(self.local_dir):
+            logging.info(f"Fetching the new commits for {self.local_dir}")
+            self.repo = Repo(self.local_dir)
+            try:
+                origin = self.repo.remotes.origin
+                response: IterableList[FetchInfo] = origin.pull()
+                for fetch_info in response:
+                    if fetch_info.commit:
+                        self.project.last_commit = fetch_info.commit
+            except GitCommandError as e:
+                error = f"Error occurred while cloning the repo with url {git_repo_url} to {self.local_dir}: {e}. "
+                logging.error("Error occurred while cloning the repo with url {0} to {1}: {2}. "
+                              "Finishing the task".format(git_repo_url, self.local_dir, e))
+                self.project.last_error = error
+            if self.project.pk:
+                self.project.save()
+
     def pygit2_clone_repo(self):
         """
         Clone the repo by pygit2 for the project and returns repo object.
@@ -196,19 +216,7 @@ class RepoTools(object):
         """
         git_repo_url = self.get_repo_url()
         if os.path.exists(self.local_dir):
-            self.repo = Repo(self.local_dir)
-            try:
-                origin = self.repo.remotes.origin
-                response: IterableList[FetchInfo] = origin.pull()
-                for fetch_info in response:
-                    print(fetch_info.commit)
-            except GitCommandError as e:
-                error = f"Error occurred while cloning the repo with url {git_repo_url} to {self.local_dir}: {e}. "
-                logging.error("Error occurred while cloning the repo with url {0} to {1}: {2}. "
-                              "Finishing the task".format(git_repo_url, self.local_dir, e))
-                self.project.last_error = error
-                if self.project.pk:
-                    self.project.save()
+            self.git_fetch()
         else:
             try:
                 self.delete_repo()

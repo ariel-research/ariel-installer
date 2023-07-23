@@ -244,6 +244,7 @@ RQ_QUEUES = {
 RQ_SHOW_ADMIN_LINK = True
 RQ_EXCEPTION_HANDLERS = []
 
+
 CREATE_VIRTUAL_ENV = os.environ.get('CREATE_VIRTUAL_ENV', True)
 value_to_bool = lambda v: v.lower() in ("yes", "true", "t", "1", "y") if isinstance(v, str) else v in (1,)
 CREATE_VIRTUAL_ENV = value_to_bool(CREATE_VIRTUAL_ENV)

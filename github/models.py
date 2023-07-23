@@ -35,6 +35,10 @@ class AIGitHubProject(models.Model):
         verbose_name_plural = _("Projects")
         verbose_name = _("Project")
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.is_cleaned = False
+
     def __str__(self):
         return "%s" % self.name
 
@@ -55,4 +59,5 @@ class AIGitHubProject(models.Model):
     def save(self, *args, **kwargs):
         if not self.is_cleaned:
             self.full_clean()
+            self.is_cleaned = True
         super(AIGitHubProject, self).save(*args, **kwargs)
