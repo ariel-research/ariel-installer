@@ -5,7 +5,7 @@
 ### Install all dependencies
 ```bash
 sudo apt update
-sudo apt install redis-server
+sudo apt install redis-server python3-virtualenv
 sudo systemctl restart redis.service
 virtualenv -p python3 .env
 pip install -r requirements.txt
