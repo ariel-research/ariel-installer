@@ -2,7 +2,6 @@
 
 from django.db import migrations, models
 import django.utils.timezone
-import guardian.mixins
 import uuid
 
 
@@ -47,6 +46,6 @@ class Migration(migrations.Migration):
                 'abstract': False,
                 'swappable': 'AUTH_USER_MODEL',
             },
-            bases=(guardian.mixins.GuardianUserMixin, models.Model),
+            bases=(models.Model,),
         ),
     ]

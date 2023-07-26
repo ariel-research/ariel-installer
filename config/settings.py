@@ -101,7 +101,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'authentication',
     'django_rq',
-    'guardian',
     'hijack',
     'hijack.contrib.admin',
     'safedelete',
@@ -148,7 +147,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 ASGI_APPLICATION = "config.asgi.application"
-GUARDIAN_MONKEY_PATCH = False
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
@@ -185,7 +183,6 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.RemoteUserBackend',
     # `allauth` specific authentication methods, such as login by e-mail
     "allauth.account.auth_backends.AuthenticationBackend",
-    "guardian.backends.ObjectPermissionBackend",
 )
 
 ACCOUNT_AUTHENTICATION_METHOD = 'email'

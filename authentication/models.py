@@ -10,8 +10,6 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from guardian.mixins import GuardianUserMixin
-
 from safedelete.models import SafeDeleteModel
 
 from abstract.models import AIAbstractDateHistoryModel
@@ -70,8 +68,7 @@ class AIUserManager(BaseUserManager):
                                  **extra_fields)
 
 
-class AbstractAIUser(AbstractBaseUser, AIAbstractDateHistoryModel, PermissionsMixin, GuardianUserMixin,
-                     SafeDeleteModel):
+class AbstractAIUser(AbstractBaseUser, AIAbstractDateHistoryModel, PermissionsMixin, SafeDeleteModel):
     """
     Abstract User with the same behaviour as Django's default User.
 
