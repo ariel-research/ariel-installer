@@ -43,6 +43,14 @@ nohup python manage.py rqscheduler &
 nohup python manage.py rqworker default low &
 ```
 
+Install crontab on Prod to start the project after reboot automatically
+
+```bash
+@reboot     cd /home/david/arielinstaller/ && source .env/bin/activate && gunicorn -b 0.0.0.0:8001 config.wsgi --daemon
+@reboot     cd /home/david/arielinstaller/ && source .env/bin/activate && nohup python manage.py rqworker default low &
+@reboot     cd /home/david/arielinstaller/ && source .env/bin/activate && nohup python manage.py rqscheduler &
+```
+
 or in Docker
 
 ```bash
