@@ -23,9 +23,13 @@ def check_new_commits_task():
         page = paginator.page(page_number)
 
         for obj in page.object_list:
+            last_commit = obj.last_commit
             obj.is_cleaned = True
             repo_tools = RepoTools(obj)
             repo_tools.git_fetch()
+            saved_instance = AIGitHubProject.objects.filter(pk=obj.pk).first()
+            if saved_instance and last_commit != saved_instance.last_commit:
+                AIApplicationRunner(saved_instance).run()
 
 
 @job
